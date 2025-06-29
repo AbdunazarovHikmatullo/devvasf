@@ -66,3 +66,28 @@ class UserSerializer(serializers.ModelSerializer):
             'role',
             'rating',
         ]
+        
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 
+            'email', 'phone_number', 'avatar', 'is_vip',
+            'city', 'desc', 'skills', 'is_available', 
+            'role', 'rating'
+        ]
+        # Исключаем чувствительные данные
+        extra_kwargs = {
+            'email': {'write_only': True},  # Скрываем email в публичном списке
+            'phone_number': {'write_only': True},  # Скрываем телефон
+        }
+
+# Можно создать отдельный serializer для публичного списка
+class PublicUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 
+            'avatar', 'is_vip', 'city', 'desc', 'skills', 
+            'is_available', 'role', 'rating'
+        ]
