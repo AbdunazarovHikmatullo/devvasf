@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     phone_number = models.CharField(max_length=9)
-    avatar = models.ImageField(upload_to='avatar/%y/%d/')
+    avatar = models.ImageField(upload_to='avatars/' , blank=True, null=True)
     is_vip = models.BooleanField(default=False)
     city = models.CharField(max_length=100)
     desc = models.TextField(max_length=300)

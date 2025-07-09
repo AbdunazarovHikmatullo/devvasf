@@ -12,13 +12,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User
 from .serializers import UserSerializer
-
-
-
+from django.shortcuts import get_object_or_404
 
 User = get_user_model()
 
 class AuthView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         users = User.objects.all()
         serializer = AuthSerializer(users, many=True)
@@ -30,7 +29,6 @@ class AuthView(APIView):
             user = serializer.save()
             return Response({'message': 'Пользователь успешно создан.'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 # Новый view для логина
 class LoginView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -68,3 +66,10 @@ def get_users_list(request):
             {'error': str(e)}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+        
+        
+class UserDetailView(APIView):
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
